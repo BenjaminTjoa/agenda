@@ -3,151 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Binnenkort Beschikbaar</title>
+    <title>Schoolagenda</title>
     <link rel="icon" href="/images/ico.ico" type="image/x-icon">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        body, html {
             margin: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-            background-color: #000;
-            color: #fff;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
         }
-        .container {
-            text-align: center;
-            max-width: 800px;
-            padding: 0 20px;
-        }
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            letter-spacing: -0.02em;
-            color: #2997ff; /* Hier is de kleur van de titel */
-        }
-        #timer {
-            font-size: 5.5rem;
-            font-weight: 300;
-            letter-spacing: -0.03em;
-            margin-bottom: 2rem;
-        }
-        p {
-            font-size: 1.5rem;
-            font-weight: 300;
-            line-height: 1.6;
-            margin-bottom: 2rem;
-            letter-spacing: -0.01em;
-        }
-        #loading, #error {
-            font-size: 1rem;
-            color: #888;
-            margin-top: 1rem;
-        }
-        .option {
-            display: none;
-        }
-        #update-message {
-            display: none;
-            font-size: 2rem;
-            font-weight: 500;
-            color: #2997ff;
-            margin-top: 2rem;
-            animation: fadeIn 1s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Binnenkort Beschikbaar</h1>
-        <div id="timer"></div>
-        <p class="option" id="option1">Bereid je voor op een nieuwe manier van plannen. Jouw tijd wordt kostbaarder dan ooit.</p>
-        <p class="option" id="option2">Ontdek binnenkort hoe eenvoud en efficiëntie samenkomen in één app.</p>
-        <p class="option" id="option3">De toekomst van tijdbeheer staat op het punt te beginnen. Wees er klaar voor.</p>
-        <div id="update-message">De website wordt zo snel mogelijk geüpdatet. Even geduld alsjeblieft.</div>
-    </div>
-    <div id="loading">Laden...</div>
-    <div id="error" style="display: none;"></div>
-
-    <script>
-        let serverTimeDiff = 0;
-
-        async function getServerTime() {
-            try {
-                const response = await fetch('https://worldtimeapi.org/api/timezone/Europe/Amsterdam');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                const serverTime = new Date(data.datetime);
-                const localTime = new Date();
-                serverTimeDiff = serverTime - localTime;
-                document.getElementById('loading').style.display = 'none';
-                return serverTime;
-            } catch (error) {
-                console.error('Fout bij het ophalen van de servertijd:', error);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('error').style.display = 'block';
-                document.getElementById('error').textContent = 'Fout bij laden van de tijd. Lokale tijd wordt gebruikt.';
-                return new Date();
-            }
-        }
-
-        function getCurrentTime() {
-            return new Date(new Date().getTime() + serverTimeDiff);
-        }
-
-        function updateTimer() {
-            const now = getCurrentTime();
-            const target = new Date(now.getFullYear(), now.getMonth(), 28, 19, 0, 0);
-            
-            if (now > target) {
-                target.setDate(target.getDate() + 1);
-            }
-
-            const diff = target - now;
-            const hours = Math.floor(diff / 3600000);
-            const minutes = Math.floor((diff % 3600000) / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
-
-            document.getElementById('timer').textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-
-            if (diff <= 0) {
-                showUpdateMessage();
-            }
-        }
-
-        function showUpdateMessage() {
-            document.getElementById('timer').style.display = 'none';
-            document.querySelectorAll('.option').forEach(el => el.style.display = 'none');
-            document.getElementById('update-message').style.display = 'block';
-        }
-
-        function showRandomOption() {
-            const options = document.querySelectorAll('.option');
-            const randomIndex = Math.floor(Math.random() * options.length);
-            options[randomIndex].style.display = 'block';
-        }
-
-        async function initTimer() {
-            await getServerTime();
-            setInterval(updateTimer, 1000);
-            updateTimer();
-            showRandomOption();
-        }
-
-        initTimer();
-    </script>
+    <iframe src="https://teamup.com/kscxw48r9pbs6kpo2f"></iframe>
 </body>
 </html>
