@@ -14,13 +14,86 @@
         gtag('js', new Date());
         gtag('config', 'G-7LD1XPEFCZ');
     </script>
-
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500&display=swap');
+        
         body, html {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        #loginSection {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        #loginForm {
+            background-color: rgba(28, 28, 30, 0.8);
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 300px;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-weight: 500;
+            font-size: 24px;
+            text-align: center;
+        }
+        input {
+            display: block;
+            margin: 20px 0;
+            padding: 12px;
+            width: 100%;
+            background-color: rgba(118, 118, 128, 0.24);
+            border: none;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input::placeholder {
+            color: #8e8e93;
+        }
+        button {
+            background-color: #0A84FF;
+            color: white;
+            padding: 12px 0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #007AFF;
+        }
+        #message {
+            color: #FF453A;
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        #inspirationalMessage {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 300;
+            max-width: 300px;
+        }
+        #agendaSection {
+            display: none;
+            height: 100%;
         }
         iframe {
             border: none;
@@ -30,6 +103,164 @@
     </style>
 </head>
 <body>
-    <iframe src="https://teamup.com/kscxw48r9pbs6kpo2f"></iframe>
+    <div id="loginSection">
+        <div id="loginForm">
+            <h2>Inloggen</h2>
+            <input type="text" id="username" placeholder="Gebruikersnaam">
+            <input type="password" id="password" placeholder="Wachtwoord">
+            <button onclick="checkCredentials()">Inloggen</button>
+            <p id="message"></p>
+        </div>
+        <p id="inspirationalMessage"></p>
+    </div>
+
+    <div id="agendaSection">
+        <iframe src="https://teamup.com/kscxw48r9pbs6kpo2f"></iframe>
+    </div>
+
+    <script>
+        const inspirationalMessages = [
+            "Ontdek je potentieel, één taak tegelijk.",
+            "Jouw toekomst begint met elke opdracht die je plant.",
+            "Organiseer vandaag, excelleer morgen.",
+            "Maak van elke dag een meesterwerk van productiviteit.",
+            "Je agenda: de blauwdruk van je succes.",
+            "Transformeer je doelen in realiteit, stap voor stap.",
+            "Elke geplande taak is een stap dichter bij je dromen.",
+            "Jouw tijd, jouw canvas. Maak er iets moois van.",
+            "Balanceer je leven, één agenda-item per keer.",
+            "Innoveer je leerproces met slimme planning.",
+            "Elk moment is een kans om te groeien.",
+            "Je agenda is de sleutel tot je toekomst.",
+            "Plannen is dromen met deadlines.",
+            "Maak van je dag een meesterwerk.",
+            "Jouw potentieel kent geen grenzen.",
+            "Elke taak voltooid is een overwinning gevierd.",
+            "Ontdek de kracht van gestructureerde creativiteit.",
+            "Je bent de architect van je eigen succes.",
+            "Leren is het avontuur van een leven.",
+            "Organisatie is de fundering van excellentie.",
+            "Jouw inspanning van vandaag vormt je morgen.",
+            "Elk moment telt, maak het waardevol.",
+            "Transformeer uitdagingen in kansen.",
+            "Je agenda is je roadmap naar succes.",
+            "Elke dag is een nieuwe kans om te excelleren.",
+            "Discipline is de brug tussen doelen en prestaties.",
+            "Jouw toekomst wordt gevormd door je dagelijkse keuzes.",
+            "Wees de beste versie van jezelf, elke dag opnieuw.",
+            "Succes is de som van kleine inspanningen, dag in dag uit.",
+            "Jouw potentieel is onbegrensd, ontdek het.",
+            "Elke taak voltooid is een stap voorwaarts.",
+            "Leren is groeien, elke dag een beetje meer.",
+            "Je bent de auteur van je eigen levensverhaal.",
+            "Maak van je dromen doelen, en van je doelen realiteit.",
+            "Jouw inzet vandaag bepaalt je succes morgen.",
+            "Elke uitdaging is een kans om te leren en te groeien.",
+            "Je bent sterker dan je denkt, slimmer dan je weet.",
+            "Ontwikkel gewoontes die je dichter bij je doelen brengen.",
+            "Jouw tijd is kostbaar, investeer het wijs.",
+            "Elk moment is een kans om het verschil te maken.",
+            "Je bent de kunstenaar van je eigen leven.",
+            "Laat je passie je kompas zijn.",
+            "Kleine stappen leiden tot grote veranderingen.",
+            "Jouw potentieel is als een zaadje, voed het elke dag.",
+            "Elke nieuwe dag is een onbeschreven bladzijde.",
+            "Je bent de schepper van je eigen mogelijkheden.",
+            "Leren is een reis, geniet van elke stap.",
+            "Jouw toewijding vandaag vormt je toekomst.",
+            "Elke uitdaging overwonnen is een les geleerd.",
+            "Je bent capabel tot meer dan je denkt.",
+            "Maak van je zwaktes je sterktes.",
+            "Jouw unieke pad leidt naar jouw unieke bestemming.",
+            "Elke dag is een nieuwe kans om te schitteren.",
+            "Je bent de held van je eigen verhaal.",
+            "Laat je nieuwsgierigheid je leiden naar nieuwe hoogtes.",
+            "Jouw groei is onbegrensd, blijf jezelf uitdagen.",
+            "Elke seconde telt, maak ze waardevol.",
+            "Je bent de architect van je eigen geluk.",
+            "Leren is leven, en leven is leren.",
+            "Jouw inspanning van vandaag is de sleutel tot morgen.",
+            "Elke hindernis overwonnen maakt je sterker.",
+            "Je bent de dirigent van je eigen succes.",
+            "Laat je dromen je motivatie zijn.",
+            "Jouw potentieel is eindeloos, ontdek het elke dag.",
+            "Elke dag is een nieuwe kans om te excelleren.",
+            "Je bent de schrijver van je eigen toekomst.",
+            "Leer, groei, en inspireer anderen.",
+            "Jouw pad naar succes begint met de eerste stap.",
+            "Elke prestatie begint met de beslissing om het te proberen.",
+            "Je bent sterker dan je obstakels.",
+            "Laat je passie je drijfveer zijn.",
+            "Jouw toekomst is wat je er zelf van maakt.",
+            "Elke dag is een geschenk, maak er iets moois van.",
+            "Je bent de kapitein van je eigen schip.",
+            "Leren is de sleutel die alle deuren opent.",
+            "Jouw reis naar excellentie begint hier en nu.",
+            "Elke uitdaging is een kans in vermomming.",
+            "Je bent de vormgever van je eigen bestemming.",
+            "Laat je nieuwsgierigheid je leiden naar nieuwe ontdekkingen.",
+            "Jouw potentieel is als een diamant, blijf het polijsten.",
+            "Elke stap vooruit is een overwinning.",
+            "Je bent de sculpteur van je eigen leven.",
+            "Leer van gisteren, leef voor vandaag, hoop voor morgen.",
+            "Jouw toewijding is de sleutel tot je succes.",
+            "Elke dag is een nieuwe kans om te groeien en te leren.",
+            "Je bent de regisseur van je eigen leven.",
+            "Laat je dromen je kompas zijn en je acties je voertuig.",
+            "Jouw reis naar kennis is eindeloos en fascinerend.",
+            "Elke ervaring is een les, elke les een stap vooruit.",
+            "Je bent de kunstenaar van je eigen meesterwerk.",
+            "Leren is het avontuur van een leven, geniet ervan.",
+            "Jouw potentieel is onbegrensd, blijf het verkennen.",
+            "Elke dag is een nieuwe pagina in het boek van je leven.",
+            "Je bent de hoofdrolspeler in je eigen succesverhaal.",
+            "Laat je passie je gids zijn naar grootsheid.",
+            "Jouw toekomst wordt gevormd door je acties van vandaag.",
+            "Elke uitdaging overwonnen is een trede op de ladder naar succes.",
+            "Je bent de architect van je eigen dromen.",
+            "Leer, groei, evolueer, en inspireer."
+        ];
+
+        function displayRandomMessage() {
+            const messageElement = document.getElementById('inspirationalMessage');
+            const randomIndex = Math.floor(Math.random() * inspirationalMessages.length);
+            messageElement.textContent = inspirationalMessages[randomIndex];
+            
+            const randomColor = Math.random();
+            if (randomColor < 0.49) {
+                messageElement.style.color = '#0A84FF';
+            } else if (randomColor < 0.98) {
+                messageElement.style.color = '#FF2D55';
+            } else {
+                messageElement.style.color = '#FFCC00';
+            }
+        }
+
+        function checkCredentials() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('message');
+
+            if (username === 'ecolle' && password === 'ecolle') {
+                message.style.color = '#32D74B';
+                message.textContent = 'Succesvol ingelogd!';
+                setTimeout(() => {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('agendaSection').style.display = 'block';
+                }, 1000);
+            } else {
+                message.style.color = '#FF453A';
+                message.textContent = 'Ongeldige gebruikersnaam of wachtwoord.';
+            }
+        }
+
+        displayRandomMessage();
+
+        document.addEventListener("visibilitychange", function() {
+            if (!document.hidden) {
+                displayRandomMessage();
+            }
+        });
+    </script>
 </body>
 </html>
