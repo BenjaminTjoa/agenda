@@ -3,20 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schoolagenda</title>
+    <title>Welkom bij agenda.benjamintjoa.nl</title>
     <link rel="icon" href="/images/ico.ico" type="image/x-icon">
     
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7LD1XPEFCZ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7LD1XPEFCZ');
-    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500&display=swap');
-        
+
         body, html {
             margin: 0;
             padding: 0;
@@ -25,14 +17,14 @@
             background-color: #000000;
             color: #ffffff;
         }
-        #loginSection {
+        #login-screen {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100%;
         }
-        #loginForm {
+        #login-box {
             background-color: rgba(28, 28, 30, 0.8);
             padding: 40px;
             border-radius: 18px;
@@ -41,12 +33,12 @@
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             width: 300px;
+            text-align: center;
         }
         h2 {
             margin-bottom: 30px;
             font-weight: 500;
             font-size: 24px;
-            text-align: center;
         }
         input {
             display: block;
@@ -78,47 +70,149 @@
         button:hover {
             background-color: #007AFF;
         }
-        #message {
-            color: #FF453A;
-            margin-top: 20px;
+        #welcome-screen {
+            display: none;
+            background-color: black;
+            color: white;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
             text-align: center;
-            font-size: 14px;
+            flex-direction: column;
         }
-        #inspirationalMessage {
+        .rainbow-text {
+            font-weight: bold;
+            background: linear-gradient(90deg, #cb1333, #de45c1, #b96be2, #84a9e0, #23d43b, #d0bb08, #eb6d17);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        #inspirational-message {
             margin-top: 20px;
-            text-align: center;
             font-size: 16px;
-            font-weight: 300;
-            max-width: 300px;
+            text-align: center;
         }
         #agendaSection {
-            display: none;
-            height: 100%;
-        }
-        iframe {
-            border: none;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
+            display: none;
+        }
+        #agendaSection iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup {
+            background-color: rgba(28, 28, 30, 0.8);
+            padding: 30px;
+            border-radius: 18px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 400px;
+            text-align: center;
+        }
+        .popup h3 {
+            color: #34C759;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+        .popup p {
+            color: white;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .close-popup {
+            background-color: #007AFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
-    <div id="loginSection">
-        <div id="loginForm">
-            <h2>Inloggen</h2>
-            <input type="text" id="username" placeholder="Gebruikersnaam">
-            <input type="password" id="password" placeholder="Wachtwoord">
-            <button onclick="checkCredentials()">Inloggen</button>
-            <p id="message"></p>
+    <div id="popup" class="popup-overlay">
+        <div class="popup">
+            <h3>Wat is er nieuw</h3>
+            <p>Je moet inloggen met je leerlingnummer + wachtwoord (welke je gewend bent!)</p>
+            <button class="close-popup" onclick="closePopup()">Sluiten</button>
         </div>
-        <p id="inspirationalMessage"></p>
     </div>
 
+    <div id="login-screen">
+        <div id="login-box">
+            <h2>Inloggen</h2>
+            <input type="text" id="leerlingnummer" placeholder="Voer je leerlingnummer in">
+            <input type="password" id="wachtwoord" placeholder="Voer het wachtwoord in">
+            <button onclick="verifyLeerling()">Log in</button>
+            <p id="message"></p>
+        </div>
+        <div id="inspirational-message"></div>
+    </div>
+    <div id="welcome-screen">
+        <div id="welcome-message"></div>
+    </div>
     <div id="agendaSection">
         <iframe src="https://teamup.com/kscxw48r9pbs6kpo2f"></iframe>
     </div>
 
     <script>
+        const leerlingen = {
+            "2223069": { voornaam: "Linde", achternaam: "Constandse" },
+            "2223215": { voornaam: "Benjamin", achternaam: "Tjoa" },
+            "2324001": { voornaam: "Charlotte", achternaam: "Adema" },
+            "2324002": { voornaam: "Yfke", achternaam: "Agterhof" },
+            "2324005": { voornaam: "Elena", achternaam: "Al-Kinani" },
+            "2324011": { voornaam: "Olivia", achternaam: "Aznar-Oswald" },
+            "2324030": { voornaam: "Isa", achternaam: "Buijs" },
+            "2324033": { voornaam: "Kemal", achternaam: "Ceylan" },
+            "2324037": { voornaam: "Lotte", achternaam: "Costantin" },
+            "2324038": { voornaam: "Sara", achternaam: "Dekker" },
+            "2324048": { voornaam: "Sebastiaan", achternaam: "Filmer" },
+            "2324057": { voornaam: "Lumen", achternaam: "Hokstam" },
+            "2324064": { voornaam: "Loek", achternaam: "de Jonge" },
+            "2324084": { voornaam: "Taeke", achternaam: "van der Lugt" },
+            "2324091": { voornaam: "Merlijn", achternaam: "Massa" },
+            "2324110": { voornaam: "Fenna", achternaam: "Rasch" },
+            "2324116": { voornaam: "Sasha", achternaam: "Rodriguez" },
+            "2324121": { voornaam: "Hanna", achternaam: "van Ruiten" },
+            "2324130": { voornaam: "Olivier", achternaam: "Soyogul" },
+            "2324131": { voornaam: "Dexter", achternaam: "Speelman" },
+            "2324139": { voornaam: "Julian", achternaam: "Streefland" },
+            "2324150": { voornaam: "Anne-Louise", achternaam: "van Veen" },
+            "2324153": { voornaam: "Luc", achternaam: "Visser" },
+            "2324156": { voornaam: "Cas", achternaam: "Vrisekoop" },
+            "2324159": { voornaam: "Daniel", achternaam: "Westerkamp" },
+            "2324162": { voornaam: "Olivia", achternaam: "van der Wurff" },
+            "2324165": { voornaam: "Hanna", achternaam: "Zhang" },
+            "2324196": { voornaam: "Max", achternaam: "Carrière" },
+            "2324221": { voornaam: "David", achternaam: "Prinsen" },
+            "2324227": { voornaam: "Scott", achternaam: "Rusman" },
+            "2425294": { voornaam: "Toon", achternaam: "de Vrieze" }
+        };
+
         const inspirationalMessages = [
             "Ontdek je potentieel, één taak tegelijk.",
             "Jouw toekomst begint met elke opdracht die je plant.",
@@ -221,46 +315,70 @@
             "Leer, groei, evolueer, en inspireer."
         ];
 
-        function displayRandomMessage() {
-            const messageElement = document.getElementById('inspirationalMessage');
-            const randomIndex = Math.floor(Math.random() * inspirationalMessages.length);
-            messageElement.textContent = inspirationalMessages[randomIndex];
+        function getRandomColor() {
+            const rand = Math.random();
+            if (rand < 0.48) return '#007AFF'; // 48%
+            if (rand < 0.96) return '#FF2D55'; // 48%
+            if (rand < 0.999) return '#FFCC00'; // 3.9%
+            return '#34C759'; // 0.1%
+        }
+
+        function getRandomMessage(messages) {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            return messages[randomIndex];
+        }
+
+        function displayInspirationalMessage() {
+            const messageElement = document.getElementById('inspirational-message');
+            const message = getRandomMessage(inspirationalMessages);
+            const color = getRandomColor();
+            messageElement.textContent = message;
+            messageElement.style.color = color;
+        }
+
+        function verifyLeerling() {
+            const leerlingnummer = document.getElementById('leerlingnummer').value;
+            const wachtwoord = document.getElementById('wachtwoord').value;
+            const messageElement = document.getElementById('message');
+            const leerling = leerlingen[leerlingnummer];
             
-            const randomColor = Math.random();
-            if (randomColor < 0.49) {
-                messageElement.style.color = '#0A84FF';
-            } else if (randomColor < 0.98) {
-                messageElement.style.color = '#FF2D55';
+            if (leerling && wachtwoord === "ecolle") {
+                document.getElementById('login-screen').style.display = 'none';
+                const welcomeScreen = document.getElementById('welcome-screen');
+                const welcomeMessage = document.getElementById('welcome-message');
+                welcomeScreen.style.display = 'flex';
+                welcomeMessage.innerHTML = '';
+                
+                const fullName = `<span class="rainbow-text">${leerling.voornaam} ${leerling.achternaam}</span>`;
+                welcomeMessage.innerHTML = `Welkom ${fullName}!<br>`;
+                const randomWelcomeMessage = getRandomMessage(inspirationalMessages);
+                setTimeout(() => typeWriter(`Leuk dat je agenda.benjamintjoa.nl gebruikt! ${randomWelcomeMessage}`, welcomeMessage, 0), 1000);
             } else {
-                messageElement.style.color = '#FFCC00';
+                messageElement.textContent = 'Deze agenda is alleen bedoeld voor leerlingen uit 2E, of je hebt een verkeerd wachtwoord ingetypt... Tip: Het is hetzelfde wachtwoord dat je gewend bent hier!';
             }
         }
 
-        function checkCredentials() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const message = document.getElementById('message');
-
-            if (username === 'ecolle' && password === 'ecolle') {
-                message.style.color = '#32D74B';
-                message.textContent = 'Succesvol ingelogd!';
+        function typeWriter(text, element, index) {
+            if (index < text.length) {
+                element.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(() => typeWriter(text, element, index), 50);
+            } else {
+                // When typewriter effect is complete, show the agenda
                 setTimeout(() => {
-                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('welcome-screen').style.display = 'none';
                     document.getElementById('agendaSection').style.display = 'block';
                 }, 1000);
-            } else {
-                message.style.color = '#FF453A';
-                message.textContent = 'Ongeldige gebruikersnaam of wachtwoord.';
             }
         }
 
-        displayRandomMessage();
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
 
-        document.addEventListener("visibilitychange", function() {
-            if (!document.hidden) {
-                displayRandomMessage();
-            }
-        });
+        window.onload = function() {
+            displayInspirationalMessage();
+        };
     </script>
 </body>
 </html>
