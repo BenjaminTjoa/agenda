@@ -107,59 +107,9 @@
             height: 100%;
             border: none;
         }
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .popup {
-            background-color: rgba(28, 28, 30, 0.8);
-            padding: 30px;
-            border-radius: 18px;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 400px;
-            text-align: center;
-        }
-        .popup h3 {
-            color: #34C759;
-            margin-bottom: 15px;
-            font-size: 24px;
-        }
-        .popup p {
-            color: white;
-            font-size: 16px;
-            line-height: 1.5;
-        }
-        .close-popup {
-            background-color: #007AFF;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            cursor: pointer;
-            font-size: 16px;
-        }
     </style>
 </head>
 <body>
-    <div id="popup" class="popup-overlay">
-        <div class="popup">
-            <h3>Wat is er nieuw</h3>
-            <p>Je moet inloggen met je leerlingnummer + wachtwoord (welke je gewend bent!)</p>
-            <button class="close-popup" onclick="closePopup()">Sluiten</button>
-        </div>
-    </div>
 
     <div id="login-screen">
         <div id="login-box">
@@ -316,12 +266,14 @@
         ];
 
         function getRandomColor() {
-            const rand = Math.random();
-            if (rand < 0.48) return '#007AFF'; // 48%
-            if (rand < 0.96) return '#FF2D55'; // 48%
-            if (rand < 0.999) return '#FFCC00'; // 3.9%
-            return '#34C759'; // 0.1%
-        }
+    const rand = Math.random();
+    if (rand < 0.48) return '#007AFF'; // 48% voor Blauw
+    if (rand < 0.96) return '#FF2D55'; // 48% voor Roze
+    if (rand < 0.9989) return '#FFCC00'; // 3.89% voor Geel
+    if (rand < 0.999) return '#AF52DE'; // 0.01% voor Paars
+    return '#34C759'; // 0.1% voor Groen
+}
+
 
         function getRandomMessage(messages) {
             const randomIndex = Math.floor(Math.random() * messages.length);
@@ -354,7 +306,7 @@
                 const randomWelcomeMessage = getRandomMessage(inspirationalMessages);
                 setTimeout(() => typeWriter(`Leuk dat je agenda.benjamintjoa.nl gebruikt! ${randomWelcomeMessage}`, welcomeMessage, 0), 1000);
             } else {
-                messageElement.textContent = 'Deze agenda is alleen bedoeld voor leerlingen uit 2E, of je hebt een verkeerd wachtwoord ingetypt... Tip: Het is hetzelfde wachtwoord dat je gewend bent hier!';
+                messageElement.textContent = 'Deze agenda is alleen voor leerlingen uit 2E. Mocht je dit wel zijn, typ dan opnieuw je leerlingnummer in en het wachtwoord dat je gewend bent! (; )';
             }
         }
 
@@ -364,7 +316,6 @@
                 index++;
                 setTimeout(() => typeWriter(text, element, index), 50);
             } else {
-                // When typewriter effect is complete, show the agenda
                 setTimeout(() => {
                     document.getElementById('welcome-screen').style.display = 'none';
                     document.getElementById('agendaSection').style.display = 'block';
