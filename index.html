@@ -262,7 +262,9 @@
             "Jouw toekomst wordt gevormd door je acties van vandaag.",
             "Elke uitdaging overwonnen is een trede op de ladder naar succes.",
             "Je bent de architect van je eigen dromen.",
-            "Leer, groei, evolueer, en inspireer."
+            "Leer, groei, evolueer, en inspireer.",
+            "Loek de Jonge is 18 oktober jarig!!!"
+
         ];
 
         function getRandomColor() {
@@ -304,7 +306,7 @@
                 const fullName = `<span class="rainbow-text">${leerling.voornaam} ${leerling.achternaam}</span>`;
                 welcomeMessage.innerHTML = `Welkom ${fullName}!<br>`;
                 const randomWelcomeMessage = getRandomMessage(inspirationalMessages);
-                setTimeout(() => typeWriter(`Wat fijn dat je agenda.benjamintjoa.nl gebruikt! ${randomWelcomeMessage}`, welcomeMessage, 0), 1000);
+                setTimeout(() => typeWriter(`Wat goed dat je agenda.benjamintjoa.nl gebruikt! ${randomWelcomeMessage}`, welcomeMessage, 0), 1000);
             } else {
                 messageElement.textContent = 'Deze agenda is alleen voor leerlingen uit 2E. Mocht je dit wel zijn, typ dan opnieuw je leerlingnummer in en het wachtwoord dat je gewend bent! (; )';
             }
