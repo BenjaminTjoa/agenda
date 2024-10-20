@@ -160,7 +160,12 @@
             "2324196": { voornaam: "Max", achternaam: "Carrière" },
             "2324221": { voornaam: "David", achternaam: "Prinsen" },
             "2324227": { voornaam: "Scott", achternaam: "Rusman" },
-            "2425294": { voornaam: "Toon", achternaam: "de Vrieze" }
+            "2425294": { voornaam: "Toon", achternaam: "de Vrieze" },
+            "VRA": { voornaam: "Anita", achternaam: "de Vries" },
+            "Anita": { voornaam: "Anita", achternaam: "de Vries" },
+            "anita": { voornaam: "Anita", achternaam: "de Vries" },
+            "Anita de Vries": { voornaam: "Anita", achternaam: "de Vries" },
+            "Anita De Vries": { voornaam: "Anita", achternaam: "de Vries" }
         };
 
         const inspirationalMessages = [
@@ -262,8 +267,7 @@
             "Jouw toekomst wordt gevormd door je acties van vandaag.",
             "Elke uitdaging overwonnen is een trede op de ladder naar succes.",
             "Je bent de architect van je eigen dromen.",
-            "Leer, groei, evolueer, en inspireer.",
-            "Loek de Jonge is 18 oktober jarig!!!"
+            "Leer, groei, evolueer, en inspireer."
 
         ];
 
@@ -308,7 +312,7 @@
                 const randomWelcomeMessage = getRandomMessage(inspirationalMessages);
                 setTimeout(() => typeWriter(`Wat goed dat je agenda.benjamintjoa.nl gebruikt! ${randomWelcomeMessage}`, welcomeMessage, 0), 1000);
             } else {
-                messageElement.textContent = 'Deze agenda is alleen voor leerlingen uit 2E. Mocht je dit wel zijn, typ dan opnieuw je leerlingnummer in en het wachtwoord dat je gewend bent! (; )';
+                messageElement.textContent = 'Deze agenda is alleen voor leerlingen uit 2E. Mocht je dit wel zijn, typ dan opnieuw je leerlingnummer in en het wachtwoord dat je gewend bent!';
             }
         }
 
