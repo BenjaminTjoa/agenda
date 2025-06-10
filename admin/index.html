@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="icon" href="https://www.benjamintjoa.com/icon.png" type="image/x-icon">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500&display=swap" crossorigin="anonymous">
+  <!-- Font Awesome voor refresh icoon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Tag Manager -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHY0YKD8VS"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-HHY0YKD8VS');
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7sbunkQLFKqC1z8S7MBZts_pz-y-QXnc",
+      authDomain: "agenda-benjamintjoa-nl.firebaseapp.com",
+      projectId: "agenda-benjamintjoa-nl",
+      storageBucket: "agenda-benjamintjoa-nl.firebasestorage.app",
+      messagingSenderId: "994953800925",
+      appId: "1:994953800925:web:878a95b40501683e423f34",
+      databaseURL: "https://agenda-benjamintjoa-nl-default-rtdb.europe-west1.firebasedatabase.app"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+  </script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #000;
+      color: #fff;
+    }
+    .loader {
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top: 4px solid #fff;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+    }
+    #login-box {
+      background-color: rgba(28, 28, 30, 0.8);
+      padding: 40px;
+      border-radius: 18px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 300px;
+      height: 300px;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 30px;
+      font-weight: 500;
+      font-size: 24px;
+    }
+    input {
+      display: block;
+      margin: 20px 0;
+      padding: 12px;
+      width: 100%;
+      background-color: rgba(118, 118, 128, 0.24);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+    input::placeholder {
+      color: #8e8e93;
+    }
+    button {
+      background-color: #0A84FF;
+      color: #fff;
+      padding: 12px 0;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #007AFF;
+    }
+    #rememberContainer {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    #rememberContainer input {
+      width: 16px;
+      height: 16px;
+    }
+    #rememberContainer select {
+      padding: 4px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: none;
+      background-color: rgba(118, 118, 128, 0.24);
+      color: #fff;
+    }
+    #inspirational-message {
+      margin-top: 20px;
+      font-size: 16px;
+      text-align: center;
+    }
+    #admin-panel {
+      display: none;
+      padding: 20px;
+    }
+    .rainbow-wrapper {
+      text-align: center;
+      padding: 10px 20px;
+    }
+    .rainbow-title {
+      font-size: 32px;
+      font-weight: bold;
+      background: linear-gradient(90deg, #cb1333, #de45c1, #b96be2, #84a9e0, #23d43b, #d0bb08, #eb6d17);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      cursor: default;
+      display: inline-block;
+    }
+    #top-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .panel-section {
+      flex: 1;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 10px;
+      background-color: #111;
+    }
+    .panel-section h2 {
+      color: #007AFF;
+      margin-top: 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #stats-row {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .stats-section h2 {
+      color: #007AFF;
+      margin-top: 0;
+      font-size: 20px;
+    }
+    .stats-list {
+      max-height: 300px;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .stats-list::-webkit-scrollbar {
+      display: none;
+    }
+    .live-info {
+      font-size: 14px;
+      color: #aaa;
+    }
+    .live-info span.status-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background-color: #34C759;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .user-info {
+      font-size: 14px;
+      color: #aaa;
+    }
+    .online-user {
+      margin: 5px 0;
+      padding: 5px;
+      border-bottom: 1px solid #333;
+    }
+    .user-name {
+      font-size: 18px;
+    }
+    .refresh-btn {
+      background-color: #FF9500;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    .refresh-btn:hover {
+      background-color: #FF9500;
+    }
+    .refresh-btn:active {
+      transform: scale(0.9);
+    }
+    .spinning {
+      animation: spin 1s linear infinite;
+    }
+    #popup-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup-content {
+      background-color: #222;
+      color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      min-width: 300px;
+    }
+    .popup-content.success {
+      border: 2px solid #34C759;
+    }
+    .popup-content.error {
+      border: 2px solid #FF2D55;
+    }
+    #popup-close {
+      margin-top: 15px;
+      background-color: #0A84FF;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div id="login-screen">
+    <div id="login-box">
+      <h2>Inloggen</h2>
+      <input type="password" id="leerlingnummer" placeholder="Gebruikersnaam">
+      <input type="password" id="wachtwoord" placeholder="Wachtwoord">
+      <button id="loginButton">Log in</button>
+      <div id="rememberContainer">
+        <input type="checkbox" id="rememberMe">
+        <label for="rememberMe">Onthoud mij voor:</label>
+        <select id="rememberDuration">
+          <option value="1">1 dag</option>
+          <option value="7">1 week</option>
+        </select>
+      </div>
+      <p id="message"></p>
+    </div>
+    <div id="inspirational-message"></div>
+  </div>
+
+  <div id="admin-panel">
+    <div class="rainbow-wrapper">
+      <h1 id="admin-title" class="rainbow-title">Admin Panel</h1>
+    </div>
+    <div id="top-row">
+      <div class="panel-section" id="nu-online-section">
+        <h2>
+          Nu Online
+          <button id="refreshButton" class="refresh-btn"><i class="fas fa-arrow-rotate-right"></i></button>
+        </h2>
+        <div id="nuOnlineLoader" class="loader" style="display:none;"></div>
+        <div id="online-users"></div>
+      </div>
+      <div class="panel-section" id="add-user-section">
+        <h2>Gebruiker Toevoegen</h2>
+        <form id="add-user-form">
+          <input type="text" id="new-naam" placeholder="Naam" required>
+          <input type="text" id="new-leerlingnummer" placeholder="Leerlingnummer" required>
+          <button type="submit">Toevoegen</button>
+        </form>
+      </div>
+    </div>
+    <div id="stats-row">
+      <div class="stats-section" id="online-today-section">
+        <h2>Online Vandaag</h2>
+        <div id="onlineTodayLoader" class="loader" style="display:none;"></div>
+        <div id="online-today-list" class="stats-list"></div>
+      </div>
+      <div class="stats-section" id="seniority-section">
+        <h2>Senioriteit</h2>
+        <div id="seniorityLoader" class="loader" style="display:none;"></div>
+        <div id="seniority-list" class="stats-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="popup-container">
+    <div class="popup-content" id="popup-content">
+      <div id="popup-message"></div>
+      <button id="popup-close">Sluiten</button>
+    </div>
+  </div>
+
+  <script>
+    function setCookie(cname, cvalue, exdays) {
+      const d = new Date();
+      d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+      const expires = "expires=" + d.toUTCString();
+      document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    function getCookie(cname) {
+      const name = cname + "=";
+      const decodedCookie = decodeURIComponent(document.cookie);
+      const ca = decodedCookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(name) === 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    const inspirationalMessages = [
+      "Ontdek je potentieel, één taak tegelijk.",
+      "Jouw toekomst begint met elke opdracht die je plant.",
+      "Organiseer vandaag, excelleer morgen.",
+      "Maak van elke dag een meesterwerk van productiviteit.",
+      "Je agenda: de blauwdruk van je succes.",
+      "Transformeer je doelen in realiteit, stap voor stap.",
+      "Elke geplande taak is een stap dichter bij je dromen.",
+      "Jouw tijd, jouw canvas. Maak er iets moois van.",
+      "Balanceer je leven, één agenda-item per keer.",
+      "Innoveer je leerproces met slimme planning.",
+      "Elk moment is een kans om te groeien.",
+      "Je agenda is de sleutel tot je toekomst.",
+      "Plannen is dromen met deadlines.",
+      "Maak van je dag een meesterwerk.",
+      "Jouw potentieel kent geen grenzen.",
+      "Elke taak voltooid is een overwinning gevierd.",
+      "Ontdek de kracht van gestructureerde creativiteit.",
+      "Je bent de architect van je eigen succes.",
+      "Leren is het avontuur van een leven.",
+      "Organisatie is de fundering van excellentie.",
+      "Jouw inspanning van vandaag vormt je morgen.",
+      "Elk moment telt, maak het waardevol.",
+      "Transformeer uitdagingen in kansen.",
+      "Je agenda is je roadmap naar succes.",
+      "Elke dag is een nieuwe kans om te excelleren.",
+      "Discipline is de brug tussen doelen en prestaties.",
+      "Jouw toekomst wordt gevormd door je dagelijkse keuzes.",
+      "Wees de beste versie van jezelf, elke dag opnieuw.",
+      "Succes is de som van kleine inspanningen, dag in dag uit.",
+      "Jouw potentieel is onbegrensd, ontdek het.",
+      "Elke taak voltooid is een stap voorwaarts.",
+      "Leren is groeien, elke dag een beetje meer.",
+      "Je bent de auteur van je eigen levensverhaal.",
+      "Maak van je dromen doelen, en van je doelen realiteit.",
+      "Jouw inzet vandaag bepaalt je succes morgen.",
+      "Elke uitdaging is een kans om te leren en te groeien.",
+      "Je bent sterker dan je denkt, slimmer dan je weet.",
+      "Ontwikkel gewoontes die je dichter bij je doelen brengen.",
+      "Jouw tijd is kostbaar, investeer het wijs.",
+      "Elk moment is een kans om het verschil te maken.",
+      "Je bent de kunstenaar van je eigen leven.",
+      "Laat je passie je kompas zijn.",
+      "Kleine stappen leiden tot grote veranderingen.",
+      "Jouw potentieel is als een zaadje, voed het elke dag.",
+      "Elke nieuwe dag is een onbeschreven bladzijde.",
+      "Je bent de schepper van je eigen mogelijkheden.",
+      "Leren is een reis, geniet van elke stap.",
+      "Jouw toewijding vandaag vormt je toekomst.",
+      "Elke uitdaging overwonnen is een les geleerd.",
+      "Je bent capabel tot meer dan je denkt.",
+      "Maak van je zwaktes je sterktes.",
+      "Jouw unieke pad leidt naar jouw unieke bestemming.",
+      "Elke dag is een nieuwe kans om te schitteren.",
+      "Je bent de held van je eigen verhaal.",
+      "Laat je nieuwsgierigheid je leiden naar nieuwe hoogtes.",
+      "Jouw groei is onbegrensd, blijf jezelf uitdagen.",
+      "Elke seconde telt, maak ze waardevol.",
+      "Je bent de architect van je eigen geluk.",
+      "Leren is leven, en leven is leren.",
+      "Jouw inspanning van vandaag is de sleutel tot morgen.",
+      "Elke hindernis overwonnen maakt je sterker.",
+      "Je bent de dirigent van je eigen succes.",
+      "Laat je dromen je motivatie zijn.",
+      "Jouw potentieel is eindeloos, ontdek het elke dag.",
+      "Elke dag is een nieuwe kans om te excelleren.",
+      "Je bent de schrijver van je eigen toekomst.",
+      "Leer, groei, en inspireer anderen.",
+      "Jouw pad naar succes begint met de eerste stap.",
+      "Elke prestatie begint met de beslissing om het te proberen.",
+      "Je bent sterker dan je obstakels.",
+      "Laat je passie je drijfveer zijn.",
+      "Jouw toekomst is wat je er zelf van maakt.",
+      "Elke dag is een geschenk, maak er iets moois van.",
+      "Je bent de kapitein van je eigen schip.",
+      "Leren is de sleutel die alle deuren opent.",
+      "Jouw reis naar excellentie begint hier en nu.",
+      "Elke uitdaging is een kans in vermomming.",
+      "Je bent de vormgever van je eigen bestemming.",
+      "Laat je nieuwsgierigheid je leiden naar nieuwe ontdekkingen.",
+      "Jouw potentieel is als een diamant, blijf het polijsten.",
+      "Elke stap vooruit is een overwinning.",
+      "Je bent de sculpteur van je eigen leven.",
+      "Leer van gisteren, leef voor vandaag, hoop voor morgen.",
+      "Jouw toewijding is de sleutel tot je succes.",
+      "Elke dag is een nieuwe kans om te groeien en te leren.",
+      "Je bent de regisseur van je eigen leven.",
+      "Laat je dromen je kompas zijn en je acties je voertuig.",
+      "Jouw reis naar kennis is eindeloos en fascinerend.",
+      "Elke ervaring is een les, elke les een stap vooruit.",
+      "Je bent de kunstenaar van je eigen meesterwerk.",
+      "Leren is het avontuur van een leven, geniet ervan.",
+      "Jouw potentieel is onbegrensd, blijf het verkennen.",
+      "Elke dag is een nieuwe pagina in het boek van je leven.",
+      "Je bent de hoofdrolspeler in je eigen succesverhaal.",
+      "Laat je passie je gids zijn naar grootsheid.",
+      "Jouw toekomst wordt gevormd door je acties van vandaag.",
+      "Elke uitdaging overwonnen is een trede op de ladder naar succes.",
+      "Je bent de architect van je eigen dromen.",
+      "Leer, groei, evolueer, en inspireer."
+    ];
+
+    function getRandomColor() {
+      const rand = Math.random();
+      if (rand < 0.48) return '#007AFF';
+      if (rand < 0.96) return '#FF2D55';
+      if (rand < 0.9989) return '#FFCC00';
+      if (rand < 0.999) return '#AF52DE';
+      return '#34C759';
+    }
+    function getRandomMessage(messages) {
+      const randomIndex = Math.floor(Math.random() * messages.length);
+      return messages[randomIndex];
+    }
+    function displayInspirationalMessage() {
+      const messageElement = document.getElementById('inspirational-message');
+      if(messageElement) {
+        messageElement.textContent = getRandomMessage(inspirationalMessages);
+        messageElement.style.color = getRandomColor();
+      }
+    }
+    function formatDate(date) {
+      const day = ("0" + date.getDate()).slice(-2);
+      const month = ("0" + (date.getMonth() + 1)).slice(-2);
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    }
+    function formatTime(date) {
+      let hours = ("0" + date.getHours()).slice(-2);
+      let minutes = ("0" + date.getMinutes()).slice(-2);
+      let seconds = Math.floor(date.getSeconds() / 10) * 10;
+      seconds = ("0" + seconds).slice(-2);
+      return `${hours}:${minutes}:${seconds}`;
+    }
+    async function getCurrentTime() {
+      try {
+        const response = await fetch("https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam");
+        if (response.ok) {
+          const data = await response.json();
+          return new Date(data.dateTime);
+        } else {
+          return new Date();
+        }
+      } catch (error) {
+        console.error("Time server error:", error);
+        return new Date();
+      }
+    }
+    async function startOnlineStatusUpdate(leerlingnummer) {
+      const now = await getCurrentTime();
+      const currentSeconds = now.getSeconds();
+      const delay = (10 - (currentSeconds % 10)) * 1000;
+      setTimeout(async () => {
+        updateOnlineStatus(leerlingnummer);
+        setInterval(() => {
+          updateOnlineStatus(leerlingnummer);
+        }, 1000);
+      }, delay);
+    }
+    async function updateOnlineStatus(leerlingnummer) {
+      const now = await getCurrentTime();
+      const datum = formatDate(now);
+      const tijd = formatTime(now);
+      console.log("Updating online status voor:", leerlingnummer, datum, tijd);
+      const userRef = database.ref('gebruikers/' + leerlingnummer);
+      userRef.update({
+        laatsteOnlineDatum: datum,
+        laatsteOnlineTijd: tijd
+      });
+    }
+    function parseTime(timeStr) {
+      const parts = timeStr.split(":").map(Number);
+      return parts[0] * 3600 + parts[1] * 60 + parts[2];
+    }
+    async function updateAdminStats(manualRefresh = false) {
+      if (manualRefresh) {
+        document.getElementById("onlineTodayLoader").style.display = "block";
+        document.getElementById("nuOnlineLoader").style.display = "block";
+        document.getElementById("seniorityLoader").style.display = "block";
+      }
+      try {
+        const snapshot = await database.ref('gebruikers').once('value');
+        const users = snapshot.val();
+        const now = await getCurrentTime();
+        const today = formatDate(now);
+        let onlineToday = [];
+        let currentlyOnline = [];
+        let allUsers = [];
+        for (let key in users) {
+          const user = users[key];
+          allUsers.push({ key, ...user });
+          if (user.laatsteOnlineDatum === today) {
+            onlineToday.push({ key, ...user });
+            if (user.laatsteOnlineTijd) {
+              const parts = user.laatsteOnlineTijd.split(":");
+              const userTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(parts[0]), parseInt(parts[1]), parseInt(parts[2]));
+              if ((now - userTime) <= 60000) {
+                currentlyOnline.push({ key, ...user });
+              }
+            }
+          }
+        }
+        onlineToday.sort((a, b) => {
+          const timeA = a.laatsteOnlineTijd ? parseTime(a.laatsteOnlineTijd) : 0;
+          const timeB = b.laatsteOnlineTijd ? parseTime(b.laatsteOnlineTijd) : 0;
+          if (timeB !== timeA) return timeB - timeA;
+          return b.loginTeller - a.loginTeller;
+        });
+        allUsers.sort((a, b) => b.loginTeller - a.loginTeller);
+        let onlineUsersHtml = "";
+        currentlyOnline.forEach(u => {
+          onlineUsersHtml += `<div class="online-user">
+            <span class="user-name">${u.voornaam} ${u.achternaam}</span><br>
+            <span class="live-info">
+              <span class="status-dot"></span>${u.key} - Inlogteller: ${u.loginTeller}${u.laatsteOnlineTijd ? " - " + u.laatsteOnlineTijd : ""}
+            </span>
+          </div>`;
+        });
+        document.getElementById("online-users").innerHTML = onlineUsersHtml;
+        let onlineTodayHtml = "";
+        onlineToday.forEach(u => {
+          onlineTodayHtml += `<div class="online-user">
+            <span class="user-name">${u.voornaam} ${u.achternaam}</span><br>
+            <span class="user-info">${u.key} - Inlogteller: ${u.loginTeller}${u.laatsteOnlineTijd ? " - " + u.laatsteOnlineTijd : ""}</span>
+          </div>`;
+        });
+        document.getElementById("online-today-list").innerHTML = onlineTodayHtml;
+        let seniorityHtml = "";
+        allUsers.forEach(u => {
+          seniorityHtml += `<div class="online-user">
+            <span class="user-name">${u.voornaam} ${u.achternaam}</span><br>
+            <span class="user-info">${u.key} - Inlogteller: ${u.loginTeller}${u.laatsteOnlineTijd ? " - " + u.laatsteOnlineTijd : ""}</span>
+          </div>`;
+        });
+        document.getElementById("seniority-list").innerHTML = seniorityHtml;
+      } catch (error) {
+        console.error("Fout bij updaten admin stats:", error);
+      } finally {
+        if (manualRefresh) {
+          document.getElementById("onlineTodayLoader").style.display = "none";
+          document.getElementById("nuOnlineLoader").style.display = "none";
+          document.getElementById("seniorityLoader").style.display = "none";
+          const refreshIcon = document.querySelector("#refreshButton i");
+          if (refreshIcon) refreshIcon.classList.remove("spinning");
+        }
+      }
+    }
+    function startAdminStatsUpdate() {
+      updateAdminStats(true);
+      setInterval(() => updateAdminStats(false), 1000);
+    }
+    async function autoLogin(loggedInUser) {
+      console.log("Auto login voor:", loggedInUser);
+      try {
+        const adminSnapshot = await database.ref('admin/' + loggedInUser).once('value');
+        if (adminSnapshot.exists()) {
+          document.getElementById('login-screen').style.display = 'none';
+          document.getElementById('admin-panel').style.display = 'block';
+          startOnlineStatusUpdate(loggedInUser);
+          startAdminStatsUpdate();
+        } else {
+          console.log("Geen admin gevonden voor:", loggedInUser);
+        }
+      } catch (error) {
+        console.error("Auto login fout:", error);
+      }
+    }
+    async function verifyLeerling() {
+      let leerlingnummer = document.getElementById('leerlingnummer').value.trim();
+      if (leerlingnummer.indexOf('@') !== -1) {
+        leerlingnummer = leerlingnummer.split('@')[0];
+      }
+      const wachtwoord = document.getElementById('wachtwoord').value.trim().toLowerCase();
+      const messageElement = document.getElementById('message');
+      console.log("Login poging voor:", leerlingnummer);
+      if (!leerlingnummer || !wachtwoord) {
+        messageElement.textContent = "Vul alstublieft zowel leerlingnummer als wachtwoord in.";
+        return;
+      }
+      try {
+        const adminSnapshot = await database.ref('admin/' + leerlingnummer).once('value');
+        if (adminSnapshot.exists()) {
+          const admin = adminSnapshot.val();
+          if (wachtwoord === admin.gebruikersnaam.toLowerCase()) {
+            console.log("Admin login succesvol voor:", leerlingnummer);
+            if (document.getElementById("rememberMe").checked) {
+              const duration = parseInt(document.getElementById("rememberDuration").value, 10);
+              setCookie("loggedInUser", leerlingnummer, duration);
+            }
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-panel').style.display = 'block';
+            startOnlineStatusUpdate(leerlingnummer);
+            startAdminStatsUpdate();
+          } else {
+            console.log("Onjuist wachtwoord voor admin:", leerlingnummer);
+            messageElement.textContent = "Onjuist wachtwoord. Probeer het opnieuw.";
+          }
+        } else {
+          console.log("Geen admin gevonden voor:", leerlingnummer);
+          messageElement.textContent = "Je hebt geen adminrechten.";
+        }
+      } catch (error) {
+        console.error("Fout bij admin login:", error);
+        messageElement.textContent = "Er is een fout opgetreden. Probeer het later opnieuw.";
+      }
+    }
+    function applyAdminTitleStyle() {
+      const adminTitle = document.getElementById("admin-title");
+      adminTitle.classList.remove("blue-title");
+      adminTitle.classList.add("rainbow-title");
+    }
+    function showPopup(message, type) {
+      const popupContainer = document.getElementById("popup-container");
+      const popupMessage = document.getElementById("popup-message");
+      const popupContent = document.getElementById("popup-content");
+      popupMessage.textContent = message;
+      popupContent.classList.remove("success", "error");
+      popupContent.classList.add(type);
+      popupContainer.style.display = "flex";
+    }
+    document.getElementById("popup-close").addEventListener("click", function() {
+      document.getElementById("popup-container").style.display = "none";
+    });
+    document.getElementById('add-user-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      let newLeerlingnummer = document.getElementById('new-leerlingnummer').value.trim();
+      if (newLeerlingnummer.indexOf('@') !== -1) {
+        newLeerlingnummer = newLeerlingnummer.split('@')[0];
+      }
+      const newNaam = document.getElementById('new-naam').value.trim();
+      if (!newLeerlingnummer || !newNaam) {
+        showPopup("Vul beide velden in.", "error");
+        return;
+      }
+      const firstSpace = newNaam.indexOf(" ");
+      let voornaam, achternaam;
+      if (firstSpace !== -1) {
+        voornaam = newNaam.substring(0, firstSpace);
+        achternaam = newNaam.substring(firstSpace + 1);
+      } else {
+        voornaam = newNaam;
+        achternaam = "";
+      }
+      const newUser = {
+        voornaam: voornaam,
+        achternaam: achternaam,
+        laatsteOnlineDatum: "",
+        laatsteOnlineTijd: "",
+        loginTeller: 0
+      };
+      try {
+        const userSnapshot = await database.ref('gebruikers/' + newLeerlingnummer).once('value');
+        if (userSnapshot.exists()) {
+          showPopup("Deze gebruiker bestaat al!", "error");
+        } else {
+          await database.ref('gebruikers/' + newLeerlingnummer).set(newUser);
+          showPopup("Gebruiker succesvol toegevoegd!", "success");
+          document.getElementById('new-leerlingnummer').value = "";
+          document.getElementById('new-naam').value = "";
+          updateAdminStats(true);
+        }
+      } catch (error) {
+        console.error("Fout bij toevoegen gebruiker:", error);
+        showPopup("Er is een fout opgetreden bij het toevoegen van de gebruiker.", "error");
+      }
+    });
+    document.getElementById('loginButton').addEventListener('click', verifyLeerling);
+    document.addEventListener('keydown', (e) => {
+      const leerlingnummerField = document.getElementById('leerlingnummer');
+      const wachtwoordField = document.getElementById('wachtwoord');
+      if (e.key === 'Enter') {
+        if (document.activeElement === leerlingnummerField) {
+          wachtwoordField.focus();
+        } else if (document.activeElement === wachtwoordField) {
+          verifyLeerling();
+        }
+      }
+    });
+    document.getElementById("admin-title").addEventListener("click", applyAdminTitleStyle);
+    document.getElementById("refreshButton").addEventListener("click", function() {
+      const refreshIcon = document.querySelector("#refreshButton i");
+      refreshIcon.classList.add("spinning");
+      updateAdminStats(true);
+    });
+    window.onload = function() {
+      displayInspirationalMessage();
+      applyAdminTitleStyle();
+      const loggedInUser = getCookie("loggedInUser");
+      if (loggedInUser) {
+        autoLogin(loggedInUser);
+      }
+    };
+  </script>
+</body>
+</html>
